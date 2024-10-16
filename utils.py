@@ -2,7 +2,7 @@
 import importlib
 from core.ReadFileSystem import ReadSystem
 from core.RandomSystem import RandomSystem
-from core.action_log import ActionLog
+from core.LogSystem import LogSystem
 from core.ParseConfig import ParseConfig
 from core.FolderSystem import FolderSystem
 from core.FileDataIter import FileDataIter
@@ -23,9 +23,6 @@ class Utils(object):
         # 文件夹处理
         self.__folder_system = FolderSystem(self)
 
-        # 日志系统
-        self.__logger_system = ActionLog(self)
-
         # 元类
         self.__factory = factory
 
@@ -34,6 +31,9 @@ class Utils(object):
 
         # file_system.run 只需要提供read的脚本和文件的路径作为做基础的参数就可以运行读取文件
         self.__file_system = ReadSystem(self)
+
+        # 日志系统
+        self.__logger_system = LogSystem(self)
 
         # 文件内容分区工具
         self._file_data_iter = FileDataIter(self)
@@ -80,8 +80,14 @@ class Utils(object):
     def get_folder_settings_item(self, key: str) -> any:
         return self.get_folder_system().get_folder_settings_item(key)
 
-    def get_log_system(self):
+    def get_logger_system(self):
         return self.__logger_system
+
+    def get_logger_settings(self) -> dict:
+        return self.get_logger_system().get_logger_settings()
+
+    def get_logger_settings_item(self, key: str) -> any:
+        return self.get_logger_system().get_logger_settings_item(key)
 
     def get_factory(self):
         return self.__factory

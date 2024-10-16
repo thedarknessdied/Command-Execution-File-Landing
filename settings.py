@@ -29,6 +29,12 @@ SETTINGS = {
             'MODULE_FILE_FOLDER': "module",
         },
 
+        "LOGGER": {
+            "DEFAULT_LOG_SUFFIX": "log",
+            "LOG_NAME_FORMAT": "%Y-%m-%d",
+            "MES_FORMAT": '%(asctime)s - %(levelname)s - %(message)s',
+            "LOG_LEVEL": "DEBUG",
+        }
     },
 
     'RUNNING': {
