@@ -18,8 +18,11 @@ class LogSystem(object):
         self.__logger_filename = self.get_random_log_name()
         self.__file_handler = None
         self.__console_handler = None
-
+        self.__log_fmt = None
         self.init()
+
+    def get_log_fmt(self):
+        return self.__log_fmt
 
     def get_utils(self):
         return self.__utils
@@ -59,13 +62,13 @@ class LogSystem(object):
         return f"{self._get_random_log_name()}.{self.get_logger_suffix()}"
 
     def get_logger_message_fmt(self):
-        return self.get_logger_settings_item("MES_FORMAT")
+        return logging.Formatter(self.get_logger_settings_item("MES_FORMAT"))
 
     def init(self):
-        logging.basicConfig(filemode="a+")
-
         self.__logger = logging.getLogger(self._get_random_log_name())
         self.__logger.setLevel(self.get_log_level())
+
+        self.__log_fmt = self.get_logger_message_fmt()
 
         _folder = self.get_utils().get_folder_settings_item("LOG_FILE_FOLDER")
         _path = self.get_utils().get_file_system().check_path_exist(
@@ -75,9 +78,11 @@ class LogSystem(object):
         )
         self.__file_handler = logging.FileHandler(_path)
         self.set_file_handler_level()
+        self.set_file_handler_msg_format()
 
         self.__console_handler = logging.StreamHandler()
         self.set_console_handler_level()
+        self.set_file_handler_msg_format()
 
         self.__logger.addHandler(self.__file_handler)
         self.__logger.addHandler(self.__console_handler)
@@ -98,7 +103,7 @@ class LogSystem(object):
         self._set_logger_level(self.get_console_handler())
 
     def _set_logger_msg_format(self, handler):
-        handler.setFormatter(self.get_logger_message_fmt())
+        handler.setFormatter(self.get_log_fmt())
 
     def set_file_handler_msg_format(self):
         self._set_logger_msg_format(self.get_file_handler())
